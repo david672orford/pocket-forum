@@ -1,0 +1,57 @@
+* {
+	box-sizing: border-box;
+	}
+HTML, BODY, H1, H2, P, FORM, TEXTAREA, PRE, UL, OL, LI {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	}
+BODY {
+	font-family: serif;
+	font-size: 12pt;
+	}
+MAIN {
+	margin: 0.5em;
+	}
+H1, H2 {
+	font-family: sans-serif;
+	font-weight: bold;
+	}
+H1 {
+	font-size: 120%;
+	}
+H2 {
+	font-size: 110%;
+	}
+H2, P {
+	margin-bottom: 0.5em;
+	}
+
+NAV.top_bar {
+	display: flex;
+	flex-direction: row;
+	background-color: black;
+	margin: -.5em -.5em .5em -.5em;
+	padding: .5em;
+	}
+NAV.top_bar > H1 {
+	flex-grow: 1;
+	color: white;
+	}
+NAV.top_bar > BUTTON {
+	margin: 0 .2em;
+	}
+NAV.top_bar A {
+	text-decoration: underline;
+	color: inherit;
+	}
+
+TABLE {
+	border-collapse: collapse;
+	margin: .3em 0;
+	}
+TH, TD {
+	border: thin solid black;
+	padding: .4em .5em;
+	}
+
