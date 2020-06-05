@@ -1,11 +1,22 @@
 {% extends "base.html" %}
 {%- block content %}
-<h1>{{forum.name}}</h1>
-<main>
 <table>
+<thead>
+<tr>
+	<th>Topic</th>
+	<th>Date</th>
+	<th>Creator</th>
+	</tr>
+</thead>
+<tbody>
 {% for topic in forum.topics %}
-<tr><td><a href="{{topic.id}}">{{topic.title}}</a></td></tr>
+<tr>
+	<td><a href="{{topic.id}}">{{topic.title}}</a></td>
+	<td>{{ topic.creation_date|datetime }}</td>
+	<td>{{ topic.user.handle }}</td>
+	</tr>
 {% endfor %}
+</tbody>
 </table>
-</main>
+<p><a href="new">New Topic</a></p>
 {% endblock -%}

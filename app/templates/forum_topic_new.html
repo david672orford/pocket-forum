@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{%- block content %}
+<form class="new_topic" action="new" method="POST">
+<input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+<input name="title">
+<textarea name="body">
+</textarea>
+<button type="submit">Create</button>
+</form>
+{% endblock -%}

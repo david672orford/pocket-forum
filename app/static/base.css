@@ -1,7 +1,7 @@
 * {
 	box-sizing: border-box;
 	}
-HTML, BODY, H1, H2, P, FORM, TEXTAREA, PRE, UL, OL, LI {
+HTML, BODY, H1, H2, H3, P, FORM, TEXTAREA, PRE, UL, OL, LI {
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -10,40 +10,91 @@ BODY {
 	font-family: serif;
 	font-size: 12pt;
 	}
+HEADER {
+	padding: 0.5em;
+	background-color: #f0f0f0;
+	}
 MAIN {
 	margin: 0.5em;
 	}
-H1, H2 {
+H1, H2, H3 {
 	font-family: sans-serif;
 	font-weight: bold;
 	}
 H1 {
 	font-size: 120%;
 	}
-H2 {
-	font-size: 110%;
-	}
-H2, P {
+P {
 	margin-bottom: 0.5em;
 	}
 
-NAV.top_bar {
-	display: flex;
-	flex-direction: row;
-	background-color: black;
-	margin: -.5em -.5em .5em -.5em;
-	padding: .5em;
+/* For adding a new topic */
+.new_topic INPUT, .new_topic TEXTAREA {
+	display: block;
+	width: 100%;
+	border: thin solid black;
+	margin: .5em 0;
+	padding: .3em;
 	}
-NAV.top_bar > H1 {
-	flex-grow: 1;
-	color: white;
+.new_topic TEXTAREA {
+	height: 12em;
 	}
-NAV.top_bar > BUTTON {
-	margin: 0 .2em;
+
+/* Topic with header and body but without comments */
+.topic {
+	background-color: #fff0f0;
+	border: thin solid black;
+	margin: .5em 0;
+	padding: 0 .5em;
 	}
-NAV.top_bar A {
-	text-decoration: underline;
-	color: inherit;
+
+/* A comment on a topic */
+.topic_comment {
+	background-color: #f0fff0;
+	border: thin solid black;
+	margin: .5em 0;
+	padding: 0 .5em;
+	}
+
+/* Topic header */
+.topic_header {
+	margin: 0.5em 0;
+	}
+.topic_poster {
+	font-weight: bold;
+	}
+.topic_date::before {
+	content: "(";
+	}
+.topic_date::after {
+	content: ")";
+	}
+
+/* Body of a topic or a topic comment */
+.topic_body {
+	background-color: white;
+	border: thin solid black;
+	margin: 0.5em 0;
+	padding: 0.2em;
+	}
+
+.topic_comment TEXTAREA {
+	display: block;
+	width: 100%;
+	border: thin solid black;
+	margin: .5em 0;
+	padding: .3em;
+	height: 12em;
+	font-family: inherit;
+	font-size: inherit;
+	}
+
+.topic_prompt {
+	margin: .5em 0;
+	}
+
+.topic_buttons {
+	margin: .5em 0;
 	}
 
 TABLE {
@@ -51,6 +102,7 @@ TABLE {
 	margin: .3em 0;
 	}
 TH, TD {
+	text-align: left;
 	border: thin solid black;
 	padding: .4em .5em;
 	}

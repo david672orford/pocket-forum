@@ -9,6 +9,10 @@ app.config.from_mapping(
 	)
 app.config.from_pyfile('config.py')
 
+from .csrf import csrf_protect
+csrf_protect(app)
+
+from . import jinja2_functions
 from . import admin
 from . import views
 

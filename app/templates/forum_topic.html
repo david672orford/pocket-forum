@@ -1,8 +1,35 @@
 {% extends "base.html" %}
 {%- block content %}
-<h1>{{topic.forum.name}}</h1>
-<main>
-<p>{{ topic.title }}</p>
-<p>{{ topic.body }}</p>
-</main>
+<div class="topic">
+	<div class="topic_header">
+		<span class="topic_poster">{{ topic.user.handle }}</span>
+		<span class="topic_date">{{ topic.creation_date|when }}</span>
+	</div>
+	<div class="topic_body">
+	{{ topic.body }}
+	</div>
+</div>
+
+{% for comment in topic.comments %}
+<div class="topic_comment">
+	<div class="topic_header">
+		<span class="topic_poster">{{ comment.user.handle }}</span>
+		<span class="topic_date">{{ comment.creation_date|when }}</span>
+	</div>
+	<div class="topic_body">
+	{{ comment.body }}
+	</div>
+</div>
+{% endfor %}
+
+<div class="topic_comment">
+	<form action="{{ topic.id }}/new" method="POST">
+		<input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+		<div class="topic_prompt">Add your comment:</div>
+		<textarea name="body"></textarea>
+		<div class="topic_buttons">
+			<button type="submit">Submit Comment</button>
+		</div>
+	</form>
+</div>
 {% endblock -%}
