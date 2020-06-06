@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{%- block content %}
+<form class="topic_comment" action="new" method="POST">
+	{{ csrf_field() }}
+	<textarea name="body"></textarea>
+	<div class="topic_buttons">
+		<button type="submit">Submit</button>
+	</div>
+</form>
+{% endblock -%}

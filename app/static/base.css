@@ -28,18 +28,6 @@ P {
 	margin-bottom: 0.5em;
 	}
 
-/* For adding a new topic */
-.new_topic INPUT, .new_topic TEXTAREA {
-	display: block;
-	width: 100%;
-	border: thin solid black;
-	margin: .5em 0;
-	padding: .3em;
-	}
-.new_topic TEXTAREA {
-	height: 12em;
-	}
-
 /* Topic with header and body but without comments */
 .topic {
 	background-color: #fff0f0;
@@ -56,6 +44,18 @@ P {
 	padding: 0 .5em;
 	}
 
+/* Topic title and body */
+.topic INPUT, .topic TEXTAREA {
+	display: block;
+	width: 100%;
+	border: thin solid black;
+	margin: .5em 0;
+	padding: .3em;
+	}
+.topic TEXTAREA {
+	height: 12em;
+	}
+
 /* Topic header */
 .topic_header {
 	margin: 0.5em 0;
@@ -63,11 +63,7 @@ P {
 .topic_poster {
 	font-weight: bold;
 	}
-.topic_date::before {
-	content: "(";
-	}
-.topic_date::after {
-	content: ")";
+.topic_date {
 	}
 
 /* Body of a topic or a topic comment */

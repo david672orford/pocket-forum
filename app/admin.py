@@ -4,7 +4,9 @@ from flask_admin.form import SecureForm
 from .models import db, Users, UserLinks, Forums, Topics, TopicTags, Comments
 from . import app
 
-admin = Admin(app, name=app.config['APP_DISPLAY_NAME'])
+def format_list(view, context, model, name):
+	value = getattr(model, name)
+	return ", ".join(map(str, value))
 
 # Create base model view
 class ModelView(InsecureModelView):
@@ -47,7 +49,9 @@ class UsersView(ModelView):
 	column_list = ('handle', 'email', 'creation_date', 'links')
 	form_columns = ('handle', 'email', 'links')
 	inline_models = (UserLinks,)
+	column_formatters = {'links': format_list}
 
+admin = Admin(app, name=app.config['APP_DISPLAY_NAME'])
 admin.add_view(ForumsView(Forums, db.session))
 admin.add_view(TopicsView(Topics, db.session))
 admin.add_view(CommentsView(Comments, db.session))

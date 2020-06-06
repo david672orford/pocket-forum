@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{%- block content %}
+<div class="topic">
+	<div class="topic_header">
+		<span class="topic_poster">
+			{{ topic.user.handle }}
+		</span>
+		<span class="topic_date">
+			({{ topic.creation_date|datetime }}{% if topic.edited_date %}, edited {{ topic.edited_date|datetime }}{% endif %})
+		</span>
+	</div>
+	{% if poster %}
+	<form action="{{ topic.id }}" method="POST">
+		{{ csrf_field() }}
+		<input type="text" name="title" value="{{ topic.title }}">
+		<textarea name="body">{{ topic.body }}</textarea>
+		<div class="topic_buttons">
+			<button type="submit">Save</button>
+		</div>
+	</form>
+	{% else %}
+	<div class="topic_body">{{ topic.body }}</div>
+	{% endif %}
+</div>
+
+{% for comment in topic.comments %}
+<div id="c{{ comment.id }}" class="topic_comment">
+	<div class="topic_header">
+		<span class="topic_poster">
+			{{ comment.user.handle }}
+		</span>
+		<span class="topic_date">
+			({{ comment.creation_date|datetime }}{% if comment.edited_date %}, edited {{ comment.edited_date|datetime }}{% endif %})
+		</span>
+	</div>
+	<div class="topic_body">{{ comment.body }}</div>
+</div>
+{% endfor %}
+
+<p>
+	<a href="{{ topic.id }}/new">
+		{% if current_user.is_authenticated %}
+		Leave a Comment
+		{% else %}
+		Log in and Comment
+		{% endif %}
+	</a>
+</p>
+
+{% endblock -%}

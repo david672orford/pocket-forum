@@ -6,6 +6,7 @@
 	<th>Topic</th>
 	<th>Date</th>
 	<th>Creator</th>
+	<th>Comments</th>
 	</tr>
 </thead>
 <tbody>
@@ -14,6 +15,7 @@
 	<td><a href="{{topic.id}}">{{topic.title}}</a></td>
 	<td>{{ topic.creation_date|datetime }}</td>
 	<td>{{ topic.user.handle }}</td>
+	<td>{{ topic.comments.count() }}</td>
 	</tr>
 {% endfor %}
 </tbody>

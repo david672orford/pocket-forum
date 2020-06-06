@@ -1,9 +1,12 @@
-from app import app
-from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.engine import Engine
 from sqlalchemy import event
+
+from flask_login import UserMixin
+
+from app import app
 
 db = SQLAlchemy(app)
 
@@ -43,7 +46,7 @@ class UserLinks(db.Model):
 			)
 
 # The user record
-class Users(db.Model):
+class Users(UserMixin, db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 
 	# The name by which the user is known in the forum
@@ -67,6 +70,9 @@ class Users(db.Model):
 	def __str__(self):
 		return "{handle} <{email}>".format(handle=self.handle, email=self.email)
 
+	def get_id(self):
+		return str(self.id)
+
 #=============================================================================
 # We can run multiple forums on this server
 #=============================================================================
@@ -76,7 +82,7 @@ class Forums(db.Model):
 	name = db.Column(db.String, nullable=False, unique=True)
 	description = db.Column(db.String)
 	creation_date = db.Column(db.DateTime, default=datetime.now)
-	topics = db.relationship("Topics", back_populates="forum", lazy='dynamic')
+	topics = db.relationship('Topics', back_populates="forum", lazy='dynamic')
 
 	def __str__(self):
 		return self.name
@@ -95,12 +101,13 @@ class Topics(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	forum_id = db.Column(db.Integer, db.ForeignKey('forums.id'))
 	forum = db.relationship("Forums", back_populates="topics")
-	title = db.Column(db.String, nullable=False, unique=False)
-	tags = db.relationship('TopicTags', secondary=topic_tags_rel, back_populates="topics")
 	user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 	user = db.relationship(Users, back_populates="topics")
+	title = db.Column(db.String, nullable=False, unique=False)
+	tags = db.relationship('TopicTags', secondary=topic_tags_rel, back_populates="topics")
 	creation_date = db.Column(db.DateTime, default=datetime.now)
-	body = db.Column(db.Text)
+	edited_date = db.Column(db.DateTime)
+	body = db.Column(db.Text, nullable=False)
 	comments = db.relationship("Comments", back_populates="topic", lazy='dynamic')
 	def __str__(self):
 		return self.title
@@ -124,6 +131,7 @@ class Comments(db.Model):
 	user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 	user = db.relationship(Users, back_populates="comments")
 	creation_date = db.Column(db.DateTime, default=datetime.now)
+	edited_date = db.Column(db.DateTime)
 	body = db.Column(db.Text)
 	def __str__(self):
 		return self.text
