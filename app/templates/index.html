@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{%- block h1 %}
+	<a href=".">{{ config['APP_DISPLAY_NAME'] }}</a>
+{% endblock -%}
 {%- block content %}
 <table>
 	<thead>

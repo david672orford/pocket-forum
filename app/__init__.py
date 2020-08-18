@@ -2,20 +2,21 @@ from flask import Flask
 
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_mapping(
-	APP_DISPLAY_NAME = "Pocket Forum",
-	SQLALCHEMY_DATABASE_URI = 'sqlite:///%s/pocket-forum.db' % app.instance_path,
+	APP_DISPLAY_NAME = "Pocket Forums",
+	SQLALCHEMY_DATABASE_URI = 'sqlite:///%s/pocket-forums.db' % app.instance_path,
 	SQLALCHEMY_TRACK_MODIFICATIONS = False,
 	FLASK_ADMIN_SWATCH = 'cerulean',
 	)
 app.config.from_pyfile('config.py')
 
-from .csrf import csrf_protect
-csrf_protect(app)
+def format_datetime(the_datetime):
+	return "%d-%02d-%02d %02d:%02d" % (the_datetime.year, the_datetime.month, the_datetime.day, the_datetime.hour, the_datetime.minute)
+app.jinja_env.filters['datetime'] = format_datetime
 
-from .login import login_manager
-login_manager.init_app(app)
+from .login import current_user
+app.jinja_env.globals['current_user'] = current_user
 
-from . import jinja2_functions
+from . import markdown
 from . import admin
 from . import views
 

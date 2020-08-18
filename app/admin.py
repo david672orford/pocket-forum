@@ -13,7 +13,6 @@ class ModelView(InsecureModelView):
     form_base_class = SecureForm
     action_disallowed_list = ['delete']     # no mass delete
     page_size = 15
-    load_html_editor = False
 
 # Base model view with support for the HTML editor field
 class HtmlModelView(ModelView):

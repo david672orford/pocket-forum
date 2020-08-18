@@ -1,47 +1,78 @@
-from flask import redirect
-from flask_login import LoginManager, login_user, current_user, login_required
-from .models import db, Users, UserLinks
+from flask import redirect, request, g, session, render_template
+from werkzeug.local import LocalProxy
+from functools import wraps
 
-login_manager = LoginManager()
+from app import app
+from .models import db, Users, UserLinks, AnonymousUser
 
-# Called if the user is logged in at the LoginManager level
-@login_manager.user_loader
-def load_user(user_id):
-	print("Load user")
-	return Users.query.filter_by(id=int(user_id)).first()
+def _get_user():
+	print("_get_user", session.get('_user_id'))
+	if not 'user' in g:
+		user = None
 
-# Called if the user is not logged in at the LoginManager level
-@login_manager.request_loader
-def request_load_user(request):
-	print("Load user from request")	
+		if '_user_id' in session:
+			user = Users.query.filter_by(id=int(session['_user_id'])).first()
+			print("user:", user)
 
-	wsgi_door = request.environ['wsgi_door']
+		if user is None:
+			wsgi_door = request.environ['wsgi_door']
+			if 'provider' in wsgi_door:
+				# Look for a link between this social media login and one of our accounts
+				user_link = UserLinks.query.filter_by(idp=wsgi_door['provider'], idp_id=wsgi_door['id']).first()
+		
+				# This social login is not linked to one of our accounts.
+				if user_link is None:
 
-	if 'provider' in wsgi_door:
-		user_link = UserLinks.query.filter_by(idp=wsgi_door['provider'], idp_id=wsgi_door['id']).first()
-		if user_link is None:
+					handle = wsgi_door['name']
+					if handle is None:
+						handle = wsgi_door['username']
+	
+					# Create user record copying data from the social login account
+					user = Users(handle=handle, email=wsgi_door['email'])
+					db.session.add(user)
+		
+					# Link the newly created user to the social login account
+					user_link = UserLinks(user=user, idp=wsgi_door['provider'], idp_id=wsgi_door['id'], idp_display_name=wsgi_door['username'])
+					db.session.add(user_link)
+		
+					db.session.commit()
+		
+				# This social login is linked to one of our accounts
+				else:
+					user = Users.query.filter_by(id=user_link.user_id).one()
 
-			user = Users(handle=wsgi_door['name'], email=wsgi_door['email'])
-			db.session.add(user)
+				session['_user_id'] = user.id
 
-			user_link = UserLinks(user=user, idp=wsgi_door['provider'], idp_id=wsgi_door['id'], idp_display_name=wsgi_door['username'])
-			db.session.add(user_link)
+		if user is None:	
+			user = AnonymousUser()
 
-			db.session.commit()
+		g.user = user
+						
+	return g.user
 
-		else:
-			user = Users.query.filter_by(id=user_link.user_id).one()
+current_user = LocalProxy(_get_user)
 
-		login_user(user)
-		return user
+# Require login to access a Flask route
+def login_required(func):
+	@wraps(func)
+	def secure_function(*args, **kwargs):
+		if not current_user.is_authenticated:
+			response = redirect("/auth/login/")
+			request.environ['wsgi_door'].set_next_url(response, request.url)
+			return response
+		return func(*args, **kwargs)
+	return secure_function
 
-	return None
+# Passed through from WSGI_Door when the user logs out
+@app.route("/auth/logout")
+def logout_hook():
+	print("logout hook")
+	session.pop('_user_id')
+	return ""
 
-# User has hit a protected view while not logged in. Save the
-# requested URL and send him to the login page.
-@login_manager.unauthorized_handler
-def unauthorized():
-	response = redirect("/auth/login/")
-	request.environ['wsgi_door'].set_next_url(response, request.url)
-	return response
-
+# User profile
+@app.route("/auth/profile")
+@login_required
+def profile():
+	return render_template("profile.html")
+ 

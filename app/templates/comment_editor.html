@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{%- block h1 %}
+	<a href="../../../..">{{ config['APP_DISPLAY_NAME'] }}</a>
+	&gt; <a href="../../..">{{ forum.name }}</a>
+	&gt; <a href="../..">{{ topic.title }}</a>
+{% endblock -%}
+{%- block content %}
+<form class="topic comment" action="{% if comment %}editor{% else %}new{% endif %}" method="POST">
+	<h2>Your Comment</h2>
+	{{ form.csrf_token }}
+	{{ form.body }}
+	<div class="topic_buttons">
+		<a href=".."><button type="button">Cancel</button></a>
+		<button type="submit">{% if comment %}Save{% else %}Submit{% endif %}</button>
+	</div>
+</form>
+{% endblock -%}
