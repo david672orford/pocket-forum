@@ -1,6 +1,6 @@
 # Pocket Forums
 
-This is an simple web forums in Python Flask.
+This is an simple web forums implementation in Python Flask.
 
 ## Database Design References
 
