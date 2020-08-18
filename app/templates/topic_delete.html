@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{%- block h1 %}
+	<a href="../..">{{ config['APP_DISPLAY_NAME'] }}</a>
+	&gt; <a href="..">{{ forum.name }}</a>
+	&gt; <a href=".">{{ topic.title }}</a>
+{% endblock -%}
+{%- block content %}
+<section class="topic">
+	<header class="topic_header">
+		<div class="topic_title">
+			{{ topic.title }}
+		</div>
+		<span class="topic_poster">
+			{{ topic.user.handle }}
+		</span>
+		<span class="topic_date">
+			({{ topic.creation_date|datetime }}{% if topic.edited_date %}, edited {{ topic.edited_date|datetime }}{% endif %})
+		</span>
+	</header>
+	<div class="topic_body">{{ topic.body|markdown }}</div>
+	<form action="delete" method="POST">
+		{{ form.csrf_token }}
+		<p>
+			<a href="."><button type="button">Cancel Deletion</button></a>
+			<button type="submit">Confirm Deletion</button>
+		</p>
+	</form>
+</section>
+{% endblock -%}
