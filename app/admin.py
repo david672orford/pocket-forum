@@ -1,7 +1,9 @@
 from flask_admin import Admin
 from flask_admin.contrib.sqla.view import ModelView as InsecureModelView
 from flask_admin.form import SecureForm
-from .models import db, Users, UserLinks, Forums, Topics, TopicTags, Comments
+from .models import db
+from app.blueprints.auth.models import Users, UserLinks
+from app.blueprints.forums.models import Forums, Topics, TopicTags, Comments
 from . import app
 
 def format_list(view, context, model, name):

@@ -9,14 +9,19 @@ app.config.from_mapping(
 	)
 app.config.from_pyfile('config.py')
 
-def format_datetime(the_datetime):
-	return "%d-%02d-%02d %02d:%02d" % (the_datetime.year, the_datetime.month, the_datetime.day, the_datetime.hour, the_datetime.minute)
-app.jinja_env.filters['datetime'] = format_datetime
+from .models import db
+db.create_all()
 
-from .login import current_user
-app.jinja_env.globals['current_user'] = current_user
-
-from . import markdown
-from . import admin
+from . import jinja2_addons
 from . import views
+from . import admin
+
+from app.blueprints.auth import auth_blueprint
+app.register_blueprint(auth_blueprint, url_prefix="/auth")
+
+from app.blueprints.forums import forum_blueprint
+app.register_blueprint(forum_blueprint, url_prefix="/")
+
+#from app.blueprints.submit import submit_blueprint
+#app.register_blueprint(submit_blueprint, url_prefix="/submit")
 

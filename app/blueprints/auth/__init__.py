@@ -1,10 +1,12 @@
-from flask import redirect, request, g, session, render_template
+from flask import Blueprint, redirect, request, g, session, render_template
 from werkzeug.local import LocalProxy
 from functools import wraps
 
-from app import app
 from .models import db, Users, UserLinks, AnonymousUser
 
+auth_blueprint = Blueprint('auth', __name__, template_folder="templates")
+
+# Implement current_user like in Flask-Login
 def _get_user():
 	print("_get_user", session.get('_user_id'))
 	if not 'user' in g:
@@ -52,7 +54,7 @@ def _get_user():
 
 current_user = LocalProxy(_get_user)
 
-# Require login to access a Flask route
+# Implement @login_required like in Flask-Login
 def login_required(func):
 	@wraps(func)
 	def secure_function(*args, **kwargs):
@@ -64,14 +66,14 @@ def login_required(func):
 	return secure_function
 
 # Passed through from WSGI_Door when the user logs out
-@app.route("/auth/logout")
+@auth_blueprint.route("/logout")
 def logout_hook():
 	print("logout hook")
 	session.pop('_user_id')
 	return ""
 
 # User profile
-@app.route("/auth/profile")
+@auth_blueprint.route("/profile")
 @login_required
 def profile():
 	return render_template("profile.html")
