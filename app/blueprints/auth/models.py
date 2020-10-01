@@ -47,12 +47,6 @@ class Users(db.Model):
 	# Date user created
 	creation_date = db.Column(db.DateTime, default=datetime.now)
 
-	# Topics opened by this user
-	topics = db.relationship('Topics', back_populates="user", lazy='dynamic')
-
-	# Comments posted by this user
-	comments = db.relationship('Comments', back_populates="user", lazy='dynamic')
-
 	# Links to identity providers
 	links = db.relationship(UserLinks, back_populates="user", lazy='dynamic')
 

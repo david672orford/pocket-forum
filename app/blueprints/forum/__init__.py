@@ -5,23 +5,24 @@ from wtforms import Form, StringField, TextAreaField
 from wtforms.csrf.session import SessionCSRF
 from wtforms.validators import DataRequired
 
-from .models import db, Users, Forums, Topics, Comments
+from .models import db, Users, ForumSections, ForumTopics, ForumComments
 from app.blueprints.auth import current_user, login_required
+from app import app
 
 #=============================================================================
 # Database fetch
 #=============================================================================
 
-def get_forum(forum_name):
+def get_section(section_name):
 	try:
-		forum = Forums.query.filter_by(name=forum_name).one()
+		forum = ForumSections.query.filter_by(name=section_name).one()
 	except NoResultFound:
 		abort(404)
 	return forum
 
-def get_topic(forum, topic_id):
+def get_topic(section, topic_id):
 	try:
-		topic = forum.topics.filter_by(id=topic_id).one()
+		topic = section.topics.filter_by(id=topic_id).one()
 	except NoResultFound:
 		abort(404)
 	return topic
@@ -84,35 +85,31 @@ class DeleteForm(MyBaseForm):
 # Content Views
 #=============================================================================
 
-forum_blueprint = Blueprint('forum', __name__, template_folder="templates")
+blueprint = Blueprint('forum', __name__, template_folder="templates")
 
-# List forums
-@forum_blueprint.route("/")
-def forums_list():
+# List forum sections
+@blueprint.route("/")
+def index():
 	return render_template(
 		"index.html",
-		forums=Forums.query
+		sections=ForumSections.query
 		)
 
-@forum_blueprint.route("/favicon.ico")
-def favicon():
-	abort(404)
-
 # List topics in a forum
-@forum_blueprint.route("/<forum_name>/")
-def forum(forum_name):
-	forum = get_forum(forum_name)
-	return render_template("forum.html", forum=forum)
+@blueprint.route("/<section_name>/")
+def section(section_name):
+	section = get_section(section_name)
+	return render_template("section.html", section=section)
 
 # Topic Create
-@forum_blueprint.route("/<forum_name>/new", methods=["GET","POST"])
+@blueprint.route("/<section_name>/new", methods=["GET","POST"])
 @login_required
-def topic_new(forum_name):
-	forum = get_forum(forum_name)
+def topic_new(section_name):
+	section = get_section(section_name)
 	form = TopicForm(formdata=request.form)
 
 	if request.method == 'POST' and form.validate():
-		topic = Topics(forum=forum)
+		topic = ForumTopics(section=section)
 		form.populate_obj(topic)
 		db.session.add(topic)
 		db.session.commit()
@@ -122,16 +119,16 @@ def topic_new(forum_name):
 	return render_template(
 		"topic_editor.html",
 		form=form,
-		forum=forum,
+		section=section,
 		topic=None,
 		)
 
 # Topic Edit
-@forum_blueprint.route("/<forum_name>/<int:topic_id>/editor", methods=['GET','POST'])
+@blueprint.route("/<section_name>/<int:topic_id>/editor", methods=['GET','POST'])
 @login_required
-def topic_edit(forum_name, topic_id):
-	forum = get_forum(forum_name)
-	topic = get_topic(forum, topic_id)
+def topic_edit(section_name, topic_id):
+	section = get_section(section_name)
+	topic = get_topic(section, topic_id)
 
 	if topic.user != current_user:
 		abort(403)
@@ -149,16 +146,16 @@ def topic_edit(forum_name, topic_id):
 	return render_template(
 		"topic_editor.html",
 		form=form,
-		forum=forum,
+		section=section,
 		topic=topic,
 		)
 
 # Topic Delete
-@forum_blueprint.route("/<forum_name>/<int:topic_id>/delete", methods=["GET", "POST"])
+@blueprint.route("/<section_name>/<int:topic_id>/delete", methods=["GET", "POST"])
 @login_required
-def topic_delete(forum_name, topic_id):
-	forum = get_forum(forum_name)
-	topic = get_topic(forum, topic_id)
+def topic_delete(section_name, topic_id):
+	section = get_section(section_name)
+	topic = get_topic(section, topic_id)
 
 	if topic.user != current_user:
 		abort(403)
@@ -168,38 +165,38 @@ def topic_delete(forum_name, topic_id):
 	if request.method == "POST" and form.validate():
 		db.session.delete(topic)
 		db.session.commit()
-		# go to forum page
+		# go to section page
 		return redirect("..")
 
 	return render_template(
 		"topic_delete.html",
 		form=form,
-		forum=forum,
+		section=section,
 		topic=topic
 		)
 
 # Topic View
-@forum_blueprint.route("/<forum_name>/<int:topic_id>/")
-def topic_view(forum_name, topic_id):
-	forum = get_forum(forum_name)
-	topic = get_topic(forum, topic_id)
+@blueprint.route("/<section_name>/<int:topic_id>/")
+def topic_view(section_name, topic_id):
+	section = get_section(section_name)
+	topic = get_topic(section, topic_id)
 
 	return render_template(
 		"topic.html",
-		forum=forum,
+		section=section,
 		topic=topic,
 		)
 
 # Comment Create
-@forum_blueprint.route("/<forum_name>/<int:topic_id>/new", methods=["GET", "POST"])
+@blueprint.route("/<section_name>/<int:topic_id>/new", methods=["GET", "POST"])
 @login_required
-def comment_new(forum_name, topic_id):
-	forum = get_forum(forum_name)
-	topic = get_topic(forum, topic_id)
+def comment_new(section_name, topic_id):
+	section = get_section(section_name)
+	topic = get_topic(section, topic_id)
 	form = CommentForm(formdata=request.form)
 
 	if request.method == "POST" and form.validate():
-		comment = Comments(topic=topic)
+		comment = ForumComments(topic=topic)
 		form.populate_obj(comment)
 		db.session.add(comment)
 		db.session.commit()
@@ -209,17 +206,17 @@ def comment_new(forum_name, topic_id):
 	return render_template(
 		"comment_editor.html",
 		form=form,
-		forum=forum,
+		section=section,
 		topic=topic,
 		comment=None
 		)
 
 # Comment Edit
-@forum_blueprint.route("/<forum_name>/<int:topic_id>/<int:comment_id>/editor", methods=["GET", "POST"])
+@blueprint.route("/<section_name>/<int:topic_id>/<int:comment_id>/editor", methods=["GET", "POST"])
 @login_required
-def comment_edit(forum_name, topic_id, comment_id):
-	forum = get_forum(forum_name)
-	topic = get_topic(forum, topic_id)
+def comment_edit(section_name, topic_id, comment_id):
+	section = get_section(section_name)
+	topic = get_topic(section, topic_id)
 	comment = get_comment(topic, comment_id)
 
 	if comment.user != current_user:
@@ -237,17 +234,17 @@ def comment_edit(forum_name, topic_id, comment_id):
 	return render_template(
 		"comment_editor.html",
 		form=form,
-		forum=forum,
+		section=section,
 		topic=topic,
 		comment=comment
 		)
 
 # Comment Delete
-@forum_blueprint.route("/<forum_name>/<int:topic_id>/<int:comment_id>/delete", methods=["GET", "POST"])
+@blueprint.route("/<section_name>/<int:topic_id>/<int:comment_id>/delete", methods=["GET", "POST"])
 @login_required
-def comment_delete(forum_name, topic_id, comment_id):
-	forum = get_forum(forum_name)
-	topic = get_topic(forum, topic_id)
+def comment_delete(section_name, topic_id, comment_id):
+	section = get_section(section_name)
+	topic = get_topic(section, topic_id)
 	comment = get_comment(topic, comment_id)
 
 	if comment.user != current_user:
@@ -264,7 +261,7 @@ def comment_delete(forum_name, topic_id, comment_id):
 	return render_template(
 		"comment_delete.html",
 		form=form,
-		forum=forum,
+		section=section,
 		topic=topic,
 		comment=comment
 		)

@@ -4,7 +4,7 @@ from functools import wraps
 
 from .models import db, Users, UserLinks, AnonymousUser
 
-auth_blueprint = Blueprint('auth', __name__, template_folder="templates")
+blueprint = Blueprint('auth', __name__, template_folder="templates")
 
 # Implement current_user like in Flask-Login
 def _get_user():
@@ -66,14 +66,14 @@ def login_required(func):
 	return secure_function
 
 # Passed through from WSGI_Door when the user logs out
-@auth_blueprint.route("/logout")
+@blueprint.route("/logout")
 def logout_hook():
 	print("logout hook")
 	session.pop('_user_id')
 	return ""
 
 # User profile
-@auth_blueprint.route("/profile")
+@blueprint.route("/profile")
 @login_required
 def profile():
 	return render_template("profile.html")

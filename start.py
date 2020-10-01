@@ -1,6 +1,7 @@
 #! /usr/bin/python3
 
 import sys
+sys.path.append("../../Modules/wsgi_door")
 from werkzeug.serving import run_simple
 from werkzeug.middleware.proxy_fix import ProxyFix
 from app import app
