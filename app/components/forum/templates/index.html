@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{%- block content %}
+<table>
+	<thead>
+		<tr>
+			<th>Section Name</th>
+			<th>Section Description</th>
+			<th>Topics</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for section in sections %}
+		<tr>
+			<td><a href="{{section.name}}/">{{section.name}}</a></td>
+			<td>{{section.description}}</td>
+			<td>{{section.topics.count()}}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock -%}

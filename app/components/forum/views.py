@@ -4,7 +4,7 @@ from datetime import datetime
 
 from .models import db, Users, ForumSections, ForumTopics, ForumComments
 from app.forms import MyBaseForm, NameField, SubjectField, BodyField
-from app.components.auth import current_user, login_required
+from app.components.users import current_user, login_required
 
 #=============================================================================
 # Database fetch

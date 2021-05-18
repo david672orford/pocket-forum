@@ -14,7 +14,7 @@ app.jinja_env.filters['datetime'] = format_datetime
 # Login
 #=============================================================================
 
-from app.components.auth import current_user
+from app.components.users import current_user
 app.jinja_env.globals['current_user'] = current_user
 
 #=============================================================================
@@ -34,7 +34,7 @@ cleaner = Cleaner(
 		"p", "br", "hr", "pre", "div",
 		"ul", "ol", "li",
 		"table", "thead", "tbody", "tr", "th", "td",
-		),	
+		),
 	remove_unknown_tags = False,
 	safe_attrs = set(["class", "href", "src", "alt"]),
 	)
@@ -45,4 +45,3 @@ def format_markdown(text):
 	return Markup(html)
 
 app.jinja_env.filters['markdown'] = format_markdown
-

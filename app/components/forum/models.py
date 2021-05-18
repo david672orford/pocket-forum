@@ -1,10 +1,10 @@
 from datetime import datetime
 from app.models import db
-from app.components.auth import current_user
-from app.components.auth.models import Users
+from app.components.users import current_user
+from app.components.users.models import Users
 
 #=============================================================================
-# 
+# Forum is divided into sections each of which contains topics
 #=============================================================================
 
 class ForumSections(db.Model):
@@ -83,4 +83,3 @@ class ForumComments(db.Model):
 
 	def __str__(self):
 		return self.text
-

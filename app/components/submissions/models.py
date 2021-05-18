@@ -1,6 +1,6 @@
 from app.models import db
-from app.components.auth import current_user
-from app.components.auth.models import Users
+from app.components.users import current_user
+from app.components.users.models import Users
 
 # An assignment which a teacher gives to a class
 class Assignments(db.Model):
@@ -32,4 +32,3 @@ class AssignmentSubmissionAttachments(db.Model):
 	assignment_id = db.Column(db.Integer, db.ForeignKey('assignment_submissions.id'))
 	name = db.Column(db.String, nullable=False, unique=True)
 	mimetype = db.Column(db.String)
-

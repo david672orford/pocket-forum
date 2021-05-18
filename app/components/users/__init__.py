@@ -1,1 +1,2 @@
-from .views import blueprint, current_user, login_required
+from .views import blueprint
+from .login import current_user, login_required

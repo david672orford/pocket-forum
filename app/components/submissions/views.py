@@ -2,7 +2,7 @@ from flask import Blueprint, request, session, render_template, abort, redirect
 
 from .models import db, Assignments, AssignmentAttachments, AssignmentSubmissions, AssignmentSubmissionAttachments
 from app.forms import MyBaseForm, NameField, SubjectField, BodyField
-from app.components.auth import current_user, login_required
+from app.components.users import current_user, login_required
 
 #=============================================================================
 # Forms
@@ -69,4 +69,3 @@ def submission(assignment_id, submission_id):
 		"submission.html",
 		submission=submission
 		)
-
