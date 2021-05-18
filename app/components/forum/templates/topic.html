@@ -1,10 +1,18 @@
 {% extends "base.html" %}
-{%- block h1 %}
-	<a href="../..">{{ config['APP_DISPLAY_NAME'] }}</a>
-	&gt; <a href="..">{{ section.name }}</a>
-	&gt; <span>{{ topic.title }}</span>
-{% endblock -%}
-{%- block content %}
+
+{% block title %}
+  {{super()}}
+  &gt; {{section.name}}
+  &gt; {{topic.title}}
+{% endblock %}
+
+{% block h1 %}
+	{{super()}}
+	&gt; <a href="..">{{section.name}}</a>
+	&gt; <span>{{topic.title}}</span>
+{% endblock %}
+
+{% block content %}
 <section class="topic">
 	<header class="topic_header">
 		<h1 class="topic_title">
@@ -53,4 +61,4 @@
 		</a>
 	</p>
 </section>
-{% endblock -%}
+{% endblock %}

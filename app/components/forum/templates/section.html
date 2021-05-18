@@ -1,9 +1,16 @@
 {% extends "base.html" %}
-{%- block h1 %}
-	<a href="..">{{ config['APP_DISPLAY_NAME'] }}</a>
-	&gt; <span>{{ section.name }}</span>
-{% endblock -%}
-{%- block content %}
+
+{% block title %}
+  {{super()}}
+	&gt; {{section.name}}
+{% endblock %}
+
+{% block h1 %}
+	{{super()}}
+	&gt; <span>{{section.name}}</span>
+{% endblock %}
+
+{% block content %}
 <table>
 <thead>
 <tr>
@@ -25,4 +32,4 @@
 </tbody>
 </table>
 <p><a href="new"><button type="button">New Topic</button></a></p>
-{% endblock -%}
+{% endblock %}

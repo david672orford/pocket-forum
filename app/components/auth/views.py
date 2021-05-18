@@ -1,23 +1,28 @@
+import logging
 from flask import Blueprint, redirect, request, g, session, render_template
 from werkzeug.local import LocalProxy
 from functools import wraps
 
 from .models import db, Users, UserLinks, AnonymousUser
 
+logger = logging.getLogger(__name__)
+
+component_list = []
+
 blueprint = Blueprint('auth', __name__, template_folder="templates")
 
 # Implement current_user like in Flask-Login
 def _get_user():
-	print("_get_user", session.get('_user_id'))
+	logger.debug("_get_user: %s" % session.get('_user_id'))
 	if not 'user' in g:
 		user = None
 
 		if '_user_id' in session:
 			user = Users.query.filter_by(id=int(session['_user_id'])).first()
-			print("user:", user)
+			logger.debug("user: %s" % user)
 
 		if user is None:
-			wsgi_door = request.environ['wsgi_door']
+			wsgi_door = request.environ.get('wsgi_door',{})
 			if 'provider' in wsgi_door:
 				# Look for a link between this social media login and one of our accounts
 				user_link = UserLinks.query.filter_by(idp=wsgi_door['provider'], idp_id=wsgi_door['id']).first()
@@ -68,7 +73,7 @@ def login_required(func):
 # Passed through from WSGI_Door when the user logs out
 @blueprint.route("/logout")
 def logout_hook():
-	print("logout hook")
+	logger.debug("logout hook")
 	session.pop('_user_id')
 	return ""
 

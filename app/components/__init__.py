@@ -5,6 +5,8 @@ from app import app
 
 logger = logging.getLogger(__name__)
 
+component_list = []
+
 def load_components():
 	# From each component subdirectory load a Flask blueprint
 	# and some Flask-Admin views.
@@ -13,5 +15,5 @@ def load_components():
 		component_module = import_module("app.components.%s" % component_name)
 		app.register_blueprint(component_module.blueprint, url_prefix="/%s" % component_name)
 		import_module("app.components.%s.admin" % component_name)
-
+		component_list.append(component_name)
 

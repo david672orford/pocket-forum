@@ -3,13 +3,13 @@ from app.admin import admin, ModelView
 
 # List of forums
 class ForumSectionsView(ModelView):
-	column_list = ('name', 'description', 'creation_date')	
+	list_columns = ('name', 'description', 'creation_date')	
 	form_columns = ('name', 'description')	
 
 # List of all topics in all forums
 class ForumTopicsView(ModelView):
-	column_list = ('section', 'user', 'creation_date', 'title', 'tags')
-	form_columns = ('section', 'user', 'title', 'tags', 'body')
+	list_columns = ('section', 'title', 'tags', 'user', 'creation_date')
+	form_columns = ('section', 'title', 'tags', 'user', 'body')
 	form_widget_args = {
 		'title': { 'class': 'wide' },
 		'url': { 'class': 'wide' },

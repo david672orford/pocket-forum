@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{%- block content %}
+<ul>
+{% for map in maps %}
+<li><a href="{{map.name}}">{{map.name}}</a> — {{map.description}}</li>
+{% endfor %}
+</ul>
+{% endblock -%}

@@ -3,9 +3,7 @@
 <head>
 <meta charset='utf-8'>
 <title>
-	{{ config['APP_DISPLAY_NAME'] }}
-	{% if forum %} &gt; {{ forum.name }}{% endif %}
-	{% if topic %} &gt; {{ topic.title }}{% endif %}
+	{{config['APP_DISPLAY_NAME']}}
 </title>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
 <link rel="stylesheet" href="/static/base.css" type="text/css">
@@ -13,14 +11,16 @@
 <body>
 <header>
 	<h1>
-		{% block h1 %}{% endblock %}
+		{% block h1 %}
+		<a href="/">{{config['APP_DISPLAY_NAME']}}</a>
+		{% endblock %}
 	</h1>
 	{% if not current_user.is_authenticated %}
 	<a href="/auth/login/?next={{ request.path }}">
 		<button>Login</button>
 	</a>
 	{% else %}
-	<a href="/auth/profile"><button>{{ current_user.handle }}</button></a>
+	<a href="/auth/profile"><button>{{current_user.handle}}</button></a>
 	<a href="/auth/logout?next={{ request.path }}">
 		<button>Logout</button>
 	</a>
