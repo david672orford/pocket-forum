@@ -60,11 +60,11 @@ blueprint = Blueprint('forum', __name__, template_folder="templates")
 @blueprint.route("/")
 def index():
 	return render_template(
-		"index.html",
+		"sections.html",
 		sections=ForumSections.query
 		)
 
-# List topics in a forum
+# List topics in a forum section
 @blueprint.route("/<section_name>/")
 def section(section_name):
 	section = get_section(section_name)
@@ -234,4 +234,3 @@ def comment_delete(section_name, topic_id, comment_id):
 		topic=topic,
 		comment=comment
 		)
-
