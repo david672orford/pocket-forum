@@ -2,11 +2,16 @@
 
 import sys
 sys.path.append("../../Modules/wsgi_door")
+import logging
 from werkzeug.serving import run_simple
 from werkzeug.middleware.proxy_fix import ProxyFix
-from app import app
+from app import app, load_components
 
 debug_mode = (len(sys.argv) >= 2 and sys.argv[1] == '--debug')
+
+logging.basicConfig(level=logging.DEBUG if debug_mode else logging.INFO)
+
+load_components()
 
 if not debug_mode:
 	from wsgi_door.providers import init_providers

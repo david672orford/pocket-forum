@@ -1,3 +1,5 @@
+# Create a Flask-Admin instance to which components can attach views
+
 from flask_admin import Admin
 from flask_admin.contrib.sqla.view import ModelView as InsecureModelView
 from flask_admin.form import SecureForm

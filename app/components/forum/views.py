@@ -1,13 +1,10 @@
 from flask import Blueprint, request, session, render_template, abort, redirect
 from sqlalchemy.orm.exc import NoResultFound
 from datetime import datetime
-from wtforms import Form, StringField, TextAreaField
-from wtforms.csrf.session import SessionCSRF
-from wtforms.validators import DataRequired
 
 from .models import db, Users, ForumSections, ForumTopics, ForumComments
-from app.blueprints.auth import current_user, login_required
-from app import app
+from app.forms import MyBaseForm, NameField, SubjectField, BodyField
+from app.components.auth import current_user, login_required
 
 #=============================================================================
 # Database fetch
@@ -36,36 +33,8 @@ def get_comment(topic, comment_id):
 
 #=============================================================================
 # Forms
+# Hierarcy: Forum -> Topic -> Comment
 #=============================================================================
-
-# Because we are not using Flask-WTF we must enable CSRF ourselves.
-class MyBaseForm(Form):
-	class Meta:
-		csrf = True
-		csrf_class = SessionCSRF
-
-		@property
-		def csrf_secret(self):
-			return app.secret_key
-
-		@property
-		def csrf_context(self):
-			return session
-
-class MyFieldMixin(object):
-	def __init__(self, placeholder=None, **kwargs):
-		super().__init__(validators=[DataRequired()], render_kw={'placeholder':placeholder}, **kwargs)
-	def populate_obj(self, obj, name):
-		setattr(obj, name, self.data.strip())
-
-class NameField(MyFieldMixin, StringField):
-	pass
-
-class SubjectField(MyFieldMixin, StringField):
-	pass
-
-class BodyField(MyFieldMixin, TextAreaField):
-	pass
 
 class ForumForm(MyBaseForm):
 	name = NameField(placeholder='Forum Name')

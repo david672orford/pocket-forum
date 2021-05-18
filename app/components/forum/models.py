@@ -1,7 +1,7 @@
 from datetime import datetime
 from app.models import db
-from app.blueprints.auth import current_user
-from app.blueprints.auth.models import Users
+from app.components.auth import current_user
+from app.components.auth.models import Users
 
 #=============================================================================
 # 

@@ -13,7 +13,7 @@ from .models import db
 from . import jinja2_addons
 from . import views
 from . import admin
-from . import blueprints
+from .components import load_components
 
 db.create_all()
 

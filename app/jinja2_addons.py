@@ -14,11 +14,11 @@ app.jinja_env.filters['datetime'] = format_datetime
 # Login
 #=============================================================================
 
-from app.blueprints.auth import current_user
+from app.components.auth import current_user
 app.jinja_env.globals['current_user'] = current_user
 
 #=============================================================================
-# Markdown
+# Convert Markdown to HTML
 #=============================================================================
 
 import markdown
