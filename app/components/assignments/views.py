@@ -1,6 +1,6 @@
 from flask import Blueprint, request, session, render_template, abort, redirect
 
-from .models import db, Assignments, AssignmentAttachments, AssignmentSubmissions, AssignmentSubmissionAttachments
+from .models import db, Assignments, AssignmentsAttachments, AssignmentsSubmissions, AssignmentsSubmissionsAttachments
 from app.forms import MyBaseForm, NameField, SubjectField, BodyField
 from app.components.users import current_user, login_required
 
@@ -49,7 +49,7 @@ def assignment_new():
 def assignment(assignment_id):
 	return render_template(
 		"assignment.html",
-		assignment=Assignment.query.filter_by(id=assignment_id).one()
+		assignment=Assignments.query.filter_by(id=assignment_id).one()
 		)
 
 @blueprint.route("/<int:assignment_id>/new", methods=["GET","POST"])
@@ -57,13 +57,13 @@ def assignment(assignment_id):
 def submission_new(assignment_id):
 	return render_template(
 		"submission_new.html",
-		assignment=Assignment.query.filter_by(id=assignment_id).one()
+		assignment=Assignments.query.filter_by(id=assignment_id).one()
 		)
 
 @blueprint.route("/<int:assignment_id>/<int:submission_id>", methods=["GET","POST"])
 @login_required
 def submission(assignment_id, submission_id):
-	assignment = Assignment.query.filter_by(id=assignment_id).one()
+	assignment = Assignments.query.filter_by(id=assignment_id).one()
 	submission = assignment.submissions.filter_by(id=submission_id).one()
 	return render_template(
 		"submission.html",

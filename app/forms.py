@@ -1,6 +1,8 @@
+from flask import session
 from wtforms import Form, StringField, TextAreaField
 from wtforms.csrf.session import SessionCSRF
 from wtforms.validators import DataRequired
+from . import app
 
 # Because we are not using Flask-WTF we must enable CSRF ourselves.
 class MyBaseForm(Form):
@@ -36,5 +38,3 @@ class SubjectField(MyFieldMixin, StringField):
 # Body of message
 class BodyField(MyFieldMixin, TextAreaField):
 	pass
-
-

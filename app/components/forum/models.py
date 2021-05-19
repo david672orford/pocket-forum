@@ -48,8 +48,9 @@ class ForumTopics(db.Model):
 	# Comments which users have posted on this topic
 	comments = db.relationship("ForumComments", back_populates="topic", lazy='dynamic', cascade='all')
 
+	# For the benefit of Flask-Admin
 	def __str__(self):
-		return self.title
+		return "%s 🡒 %s" % (self.section.name, self.title)
 
 class ForumTags(db.Model):
 	id = db.Column(db.Integer, primary_key=True)

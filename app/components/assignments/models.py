@@ -9,26 +9,26 @@ class Assignments(db.Model):
 	user_id = db.Column(db.Integer, db.ForeignKey("users.id"), default=lambda: current_user.id)
 	user = db.relationship(Users)
 	text = db.Column(db.Text, nullable=False)
-	attachments = db.relationship('AssignmentAttachments')
+	attachments = db.relationship('AssignmentsAttachments')
 
 # A file which a teacher attaches to an assignment
-class AssignmentAttachments(db.Model):
+class AssignmentsAttachments(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	assignment_id = db.Column(db.Integer, db.ForeignKey('assignments.id'))
 	name = db.Column(db.String, nullable=False, unique=True)
 	mimetype = db.Column(db.String)
 
 # A student's work turned in in fufillment of the assignment
-class AssignmentSubmissions(db.Model):
+class AssignmentsSubmissions(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	user_id = db.Column(db.Integer, db.ForeignKey("users.id"), default=lambda: current_user.id)
 	user = db.relationship(Users)
 	text = db.Column(db.Text, nullable=False)
-	attachments = db.relationship('AssignmentSubmissionAttachments')
+	attachments = db.relationship('AssignmentsSubmissionsAttachments')
 
 # A file which a student attaches as part of the work he is handing in
-class AssignmentSubmissionAttachments(db.Model):
+class AssignmentsSubmissionsAttachments(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	assignment_id = db.Column(db.Integer, db.ForeignKey('assignment_submissions.id'))
+	assignment_id = db.Column(db.Integer, db.ForeignKey('assignments_submissions.id'))
 	name = db.Column(db.String, nullable=False, unique=True)
 	mimetype = db.Column(db.String)

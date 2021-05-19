@@ -5,7 +5,6 @@
 <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 {% endblock %}
 
-{# Replace this block so we can load Fontawesome and so we can remove the style block #}
 {% block head_css %}
   {{ super() }}
   <link href="/static/admin-local.css" rel="stylesheet">

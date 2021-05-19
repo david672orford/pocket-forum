@@ -16,4 +16,3 @@ from . import admin
 from .components import load_components
 
 db.create_all()
-

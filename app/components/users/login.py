@@ -2,6 +2,7 @@ import logging
 from flask import redirect, request, g, session, render_template
 from werkzeug.local import LocalProxy
 from functools import wraps
+from .models import db, Users, UserLinks, AnonymousUser
 
 logger = logging.getLogger(__name__)
 
