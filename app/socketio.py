@@ -1,6 +1,6 @@
 from flask_socketio import SocketIO, send, emit
 from . import app
-from .components.users import current_user
+from .subapps.users import current_user
 
 socketio = SocketIO(app, logger=True, engineio_logger=True)
 

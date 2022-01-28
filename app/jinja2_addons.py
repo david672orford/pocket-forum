@@ -14,7 +14,7 @@ app.jinja_env.filters['datetime'] = format_datetime
 # Login
 #=============================================================================
 
-from app.components.users import current_user
+from app.subapps.users import current_user
 app.jinja_env.globals['current_user'] = current_user
 
 #=============================================================================

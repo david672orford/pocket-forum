@@ -1,5 +1,11 @@
 # Developement Notes
 
+## SocketIO
+
+* [Flask-SocketIO Docs](https://flask-socketio.readthedocs.io/en/latest/)
+* [Flask-SocketIO on Github](https://github.com/miguelgrinberg/Flask-SocketIO)
+* [Socket.io](https://socket.io/)
+
 ## Database Design References
 
 * [Arbitrarily ordering records in a table]
