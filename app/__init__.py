@@ -16,4 +16,5 @@ from . import views
 from . import admin
 from . import subapps
 
-db.create_all()
+with app.app_context():
+	db.create_all()
