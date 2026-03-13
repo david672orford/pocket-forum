@@ -1,6 +1,6 @@
 from app.models import db
-from app.components.users import current_user
-from app.components.users.models import Users
+from app.subapps.users import current_user
+from app.subapps.users.models import Users
 
 # An assignment which a teacher gives to a class
 class Assignments(db.Model):

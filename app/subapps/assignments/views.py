@@ -2,7 +2,7 @@ from flask import Blueprint, request, session, render_template, abort, redirect
 
 from .models import db, Assignments, AssignmentsAttachments, AssignmentsSubmissions, AssignmentsSubmissionsAttachments
 from app.forms import MyBaseForm, NameField, SubjectField, BodyField
-from app.components.users import current_user, login_required
+from app.subapps.users import current_user, login_required
 
 #=============================================================================
 # Forms

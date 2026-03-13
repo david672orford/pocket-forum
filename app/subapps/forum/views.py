@@ -4,7 +4,7 @@ from datetime import datetime
 
 from .models import db, Users, ForumSections, ForumTopics, ForumComments
 from app.forms import MyBaseForm, NameField, SubjectField, BodyField
-from app.components.users import current_user, login_required
+from app.subapps.users import current_user, login_required
 
 #=============================================================================
 # Database fetch
@@ -37,15 +37,15 @@ def get_comment(topic, comment_id):
 #=============================================================================
 
 class ForumForm(MyBaseForm):
-	name = NameField(placeholder='Forum Name')
-	description = SubjectField(placeholder='Forum Description')
+	name = NameField(placeholder="Forum Name")
+	description = SubjectField(placeholder="Forum Description")
 
 class TopicForm(MyBaseForm):
-	title = SubjectField(placeholder='Topic Title')
-	body = BodyField(placeholder='Topic Description')
+	title = SubjectField(placeholder="Topic Title")
+	body = BodyField(placeholder="Topic Description")
 
 class CommentForm(MyBaseForm):
-	body = BodyField(placeholder='Your Comment')
+	body = BodyField(placeholder="Your Comment")
 
 class DeleteForm(MyBaseForm):
 	pass

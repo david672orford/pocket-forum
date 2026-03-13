@@ -1,23 +1,54 @@
-#! /usr/bin/python3
+#! /usr/bin/env python3
+#
+# This starts the application under a standalone Werkzeug web server. During
+# testing you can run it like this:
+#
+# $ ./start --debug --localhost
+#
+# Then connect to http://localhost:5000.
+#
+# In the Docker container Gunicorn is used instead.
+#
+
+from venv_tool import activate
+activate()
 
 import sys
+from argparse import ArgumentParser, RawDescriptionHelpFormatter
 import logging
-#from werkzeug.serving import run_simple
-from werkzeug.middleware.proxy_fix import ProxyFix
 
-debug_mode = (len(sys.argv) >= 2 and sys.argv[1] == '--debug')
-logging.basicConfig(level=logging.DEBUG if debug_mode else logging.INFO)
+from werkzeug.serving import run_simple
 
-from app import app
-from app.socketio import socketio
+parser = ArgumentParser(
+	description = __doc__,
+	formatter_class = RawDescriptionHelpFormatter,
+	)
+parser.add_argument("--debug", action="store_true")
+parser.add_argument("--debug-requests", action="store_true")
+parser.add_argument("--use-reloader", action="store_true")
+parser.add_argument("--listen-addr", default="127.0.0.1")
+parser.add_argument("--listen-port", type=int, default=5000)
+options = parser.parse_args()
 
-if not debug_mode:
-	from wsgi_door.providers import init_providers
-	from wsgi_door.middleware import WsgiDoorAuth, WsgiDoorFilter
-	app.wsgi_app = WsgiDoorFilter(app.wsgi_app, protected_paths=["/admin/"], allowed_groups=app.config['ALLOWED_GROUPS'])
-	auth_providers = init_providers(app.config['AUTH_CLIENT_KEYS'])
-	app.wsgi_app = WsgiDoorAuth(app.wsgi_app, auth_providers, app.config['SECRET_KEY'], stylesheet_url="/static/base.css")
+if options.debug:
+	from app import app, start_background
+	start_background()
+else:
+	from app.production import app
 
-app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_for=1)
-#run_simple('0.0.0.0', 5000, app, threaded=True)
-socketio.run(app, debug=True)
+logging.basicConfig(
+	level=logging.DEBUG if options.debug else logging.INFO,
+	format='%(asctime)s:%(levelname)s:%(name)s:%(message)s',
+	datefmt='%Y-%m-%d %H:%M:%S',
+	)
+
+if options.debug_requests:
+	from http.client import HTTPConnection
+	HTTPConnection.debuglevel = 1
+
+run_simple(
+	options.listen_addr, options.listen_port,
+	app,
+	threaded=True,
+	use_reloader = options.use_reloader,
+	)

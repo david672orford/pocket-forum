@@ -18,7 +18,7 @@ def sqlite_connect_hook(dbapi_connection, connection_record):
 
 	# Load Spatialite extension
 	dbapi_connection.enable_load_extension(True)
-	dbapi_connection.load_extension('mod_spatialite')
+	dbapi_connection.load_extension("mod_spatialite.so.8")
 	dbapi_connection.enable_load_extension(False)
 
 	# Initialize the spatial extensions
@@ -28,26 +28,26 @@ class Maps(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String)
 	description = db.Column(db.String)
-	points = db.relationship('MapPoints')
+	points = db.relationship("MapPoints")
 	def __str__(self):
 		return self.name
 
 class MapPoints(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	map_id = db.Column(db.Integer, db.ForeignKey('maps.id'))
+	map_id = db.Column(db.Integer, db.ForeignKey("maps.id"))
 	map = db.relationship(Maps)
 	name = db.Column(db.String)
 	description = db.Column(db.String)
 	comment = db.Column(db.String)
 	source = db.Column(db.String)
 	symbol = db.Column(db.String)
-	geom = db.Column(Geometry(geometry_type='POINT', management=True))
+	geom = db.Column(Geometry(geometry_type="POINT"))
 
 	def as_geojson(self):
 		print(self.geom)
 		print(db.session.scalar(func.ST_AsGeoJSON(self.geom)))
 		waypoint = json.loads(db.session.scalar(func.ST_AsGeoJSON(self.geom)))
-		waypoint['properties'] = dict(
+		waypoint["properties"] = dict(
 			name = self.name,
 			description = self.description,
 			)

@@ -1,0 +1,19 @@
+Flask
+Flask-Admin
+Flask-SQLAlchemy
+SQLAlchemy
+WTForms
+Jinja2
+MarkupSafe
+werkzeug==2.3.7
+gunicorn
+
+# OAuth2 Authentication
+git+https://github.com/david672orford/wsgi_door
+git+https://github.com/pallets-eco/secure-cookie.git
+
+geoalchemy2
+markdown
+lxml
+lxml-html-clean
+

@@ -1,4 +1,4 @@
-from jinja2 import Markup
+from markupsafe import Markup
 
 from app import app
 
@@ -15,7 +15,7 @@ app.jinja_env.filters['datetime'] = format_datetime
 #=============================================================================
 
 from app.subapps.users import current_user
-app.jinja_env.globals['current_user'] = current_user
+app.jinja_env.globals["current_user"] = current_user
 
 #=============================================================================
 # Convert Markdown to HTML
@@ -44,4 +44,4 @@ def format_markdown(text):
 	html = cleaner.clean_html(html)
 	return Markup(html)
 
-app.jinja_env.filters['markdown'] = format_markdown
+app.jinja_env.filters["markdown"] = format_markdown
